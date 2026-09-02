@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#25b9f3">
+    <meta name="description" content="One Phone. One Student. Equal Opportunity. Learn anywhere with U-CONNECT.">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="U-CONNECT">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <title>U-CONNECT</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%2325b9f3' width='192' height='192' rx='45'/><text x='96' y='96' font-size='120' fill='%23071014' text-anchor='middle' dominant-baseline='central' font-family='sans-serif' font-weight='bold'>U</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%2325b9f3' width='192' height='192' rx='45'/><text x='96' y='96' font-size='120' fill='%23071014' text-anchor='middle' dominant-baseline='central' font-family='sans-serif' font-weight='bold'>U</text></svg>">
+    
+</head>
+
+<body>
+
+    <header class="top-bar">
+        <div>
+            <h1>U-CONNECT 🇿🇦</h1>
+            <p>One Phone. One Student. Equal Opportunity.</p>
+        </div>
+
+        <div class="header-actions">
+            <span id="connectionStatus" class="connection-status">🟢 Online</span>
+            <button id="themeButton" class="icon-button" aria-label="Toggle theme">🌙</button>
+        </div>
+    </header>
+
+
+    <main>
+
+        <!-- HOME -->
+        <section id="home" class="page active">
+
+            <div class="welcome-card">
+                <span class="wave">👋</span>
+
+                <div>
+                    <p>Welcome back</p>
+                    <h2 id="studentName">Student</h2>
+                </div>
+            </div>
+
+
+            <h2 class="section-title">What do you need?</h2>
+
+
+            <div class="feature-grid">
+
+                <button class="feature learning" onclick="openPage('learn')">
+                    <span>📚</span>
+                    <h3>Learn</h3>
+                    <p>Study anywhere</p>
+                </button>
+
+
+                <button class="feature safety" onclick="openPage('safety')">
+                    <span>🛡️</span>
+                    <h3>Stay Safe</h3>
+                    <p>Safety information</p>
+                </button>
+
+
+                <button class="feature help" onclick="openPage('help')">
+                    <span>🆘</span>
+                    <h3>Get Help</h3>
+                    <p>Find support</p>
+                </button>
+
+
+                <button class="feature profile" onclick="openPage('profile')">
+                    <span>👤</span>
+                    <h3>My Profile</h3>
+                    <p>Your account</p>
+                </button>
+
+            </div>
+
+
+            <div class="daily-card">
+
+                <div class="card-header">
+                    <span>💭</span>
+                    <h3>Today's Thought</h3>
+                </div>
+
+                <p id="dailyThought">
+                    Your future is built by what you do today.
+                </p>
+
+            </div>
+
+
+            <div class="progress-card">
+
+                <div class="progress-info">
+                    <div>
+                        <span>📈</span>
+                        <strong>Learning Progress</strong>
+                    </div>
+
+                    <strong id="overallProgressText">0%</strong>
+                </div>
+
+                <div class="progress-bar">
+                    <div id="overallProgressBar" class="progress" style="width: 0%"></div>
+                </div>
+
+                <p id="progressSummaryText">Keep going. You've got this! 🔥</p>
+
+            </div>
+
+        </section>
+
+
+        <!-- LEARN -->
+        <section id="learn" class="page">
+
+            <button class="back-button" onclick="openPage('home')">
+                ← Back
+            </button>
+
+            <h2>📚 Learn</h2>
+
+            <p class="page-description">
+                Learn anywhere, even when you don't have a laptop.
+            </p>
+
+
+            <div class="subject">
+                <span>💻</span>
+                <div>
+                    <h3>Information Technology</h3>
+                    <p>Programming • Networks • Systems</p>
+                </div>
+            </div>
+
+
+            <div class="subject">
+                <span>➗</span>
+                <div>
+                    <h3>Mathematics</h3>
+                    <p>Practice • Problems • Quizzes</p>
+                </div>
+            </div>
+
+
+            <div class="subject">
+                <span>📖</span>
+                <div>
+                    <h3>English</h3>
+                    <p>Reading • Writing • Communication</p>
+                </div>
+            </div>
+
+
+            <div class="subject">
+                <span>🔬</span>
+                <div>
+                    <h3>Science</h3>
+                    <p>Lessons • Experiments • Quizzes</p>
+                </div>
+            </div>
+
+            <div class="report-card" style="margin-top: 20px;">
+                <h3>Track your progress</h3>
+
+                <form id="progressForm">
+                    <label for="progressStudent">Student</label>
+                    <select id="progressStudent" required></select>
+
+                    <label for="progressSubject">Subject</label>
+                    <input id="progressSubject" type="text" placeholder="e.g. Mathematics" required>
+
+                    <label for="progressPercentage">Progress (%)</label>
+                    <input id="progressPercentage" type="number" min="0" max="100" placeholder="75" required>
+
+                    <button type="submit" class="primary-button">Save Progress</button>
+                </form>
+            </div>
+
+            <div class="saved-students-panel" style="margin-top: 20px;">
+                <h3>Recent progress</h3>
+                <div id="progressList" class="saved-students-list"></div>
+            </div>
+
+        </section>
+
+
+        <!-- SAFETY -->
+        <section id="safety" class="page">
+
+            <button class="back-button" onclick="openPage('home')">
+                ← Back
+            </button>
+
+            <h2>🛡️ Stay Safe</h2>
+
+            <p class="page-description">
+                Information that can help you recognise unsafe situations.
+            </p>
+
+
+            <div class="safety-item">
+                <span>💜</span>
+                <div>
+                    <h3>GBV Awareness</h3>
+                    <p>Learn about warning signs and how to seek support.</p>
+                </div>
+            </div>
+
+
+            <div class="safety-item">
+                <span>🚫</span>
+                <div>
+                    <h3>Human Trafficking</h3>
+                    <p>Learn how trafficking can happen and recognise warning signs.</p>
+                </div>
+            </div>
+
+
+            <div class="safety-item">
+                <span>🚗</span>
+                <div>
+                    <h3>Travel Safety</h3>
+                    <p>Practical safety information for travelling to and from school.</p>
+                </div>
+            </div>
+
+
+            <div class="safety-item">
+                <span>🏫</span>
+                <div>
+                    <h3>School Safety</h3>
+                    <p>Learn how to respond when something doesn't feel right.</p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- HELP -->
+        <section id="help" class="page">
+
+            <button class="back-button" onclick="openPage('home')">
+                ← Back
+            </button>
+
+            <h2>🆘 Get Help</h2>
+
+            <div class="emergency-card">
+
+                <span>🚨</span>
+
+                <h3>Need immediate help?</h3>
+
+                <p>
+                    If you are in immediate danger, contact the appropriate
+                    emergency services or a trusted adult.
+                </p>
+
+                <button id="emergencyBtn" class="danger-button">
+                    I NEED HELP
+                </button>
+
+            </div>
+
+            <div class="report-card">
+                <h3>Report an incident</h3>
+                <form id="reportForm">
+                    <label for="incidentType">Type of incident</label>
+                    <select id="incidentType" required>
+                        <option value="">Select</option>
+                        <option value="harassment">Harassment</option>
+                        <option value="unsafe_area">Unsafe area</option>
+                        <option value="theft">Theft</option>
+                        <option value="medical">Medical emergency</option>
+                        <option value="other">Other</option>
+                    </select>
+
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="4" placeholder="Describe what happened..." required></textarea>
+
+                    <button type="submit" class="primary-button">Submit Report</button>
+                </form>
+            </div>
+
+            <div id="announcements" class="announcements-list"></div>
+
+            <div class="help-item">
+                👨‍🏫
+                <div>
+                    <h3>Trusted Teacher</h3>
+                    <p>Contact a teacher or school support person.</p>
+                </div>
+            </div>
+
+
+            <div class="help-item">
+                👨‍👩‍👧
+                <div>
+                    <h3>Trusted Adult</h3>
+                    <p>Speak to someone you trust.</p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- PROFILE -->
+        <section id="profile" class="page">
+
+            <button class="back-button" onclick="openPage('home')">
+                ← Back
+            </button>
+
+            <h2>👤 My Profile</h2>
+
+
+            <div class="profile-card">
+
+                <div class="avatar">
+                    👤
+                </div>
+
+                <h2 id="profileName">Student</h2>
+
+                <p>U-CONNECT Student</p>
+
+                <form id="profileForm" class="profile-form">
+                    <label for="name">Student name</label>
+                    <input id="name" type="text" placeholder="Enter your name" required>
+                    <button type="submit" class="primary-button">Save Profile</button>
+                </form>
+
+                <div class="profile-stats">
+
+                    <div>
+                        <strong>0</strong>
+                        <span>Lessons</span>
+                    </div>
+
+                    <div>
+                        <strong>0</strong>
+                        <span>Quizzes</span>
+                    </div>
+
+                    <div>
+                        <strong>35%</strong>
+                        <span>Progress</span>
+                    </div>
+
+                </div>
+
+                <div class="saved-students-panel">
+                    <h3>Saved students</h3>
+                    <div id="savedStudentsList" class="saved-students-list"></div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- BOTTOM NAVIGATION -->
+
+    <nav class="bottom-nav">
+
+        <button onclick="openPage('home')">
+            🏠
+            <span>Home</span>
+        </button>
+
+        <button onclick="openPage('learn')">
+            📚
+            <span>Learn</span>
+        </button>
+
+        <button onclick="openPage('safety')">
+            🛡️
+            <span>Safety</span>
+        </button>
+
+        <button onclick="openPage('help')">
+            🆘
+            <span>Help</span>
+        </button>
+
+        <button onclick="openPage('profile')">
+            👤
+            <span>Profile</span>
+        </button>
+
+    </nav>
+
+
+    <script src="app.js"></script>
+
+    <script>
+        // Register Service Worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', async () => {
+                try {
+                    const registration = await navigator.serviceWorker.register('./service-worker.js', {
+                        scope: './'
+                    });
+                    console.log('Service Worker registered successfully:', registration);
+
+                    // Check for updates periodically
+                    setInterval(() => {
+                        registration.update();
+                    }, 60000); // Check every minute
+
+                    // Listen for updates
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // New service worker available, show update prompt
+                                console.log('New version available! Please refresh to update.');
+                                // You can show a toast/notification here
+                            }
+                        });
+                    });
+                } catch (error) {
+                    console.error('Service Worker registration failed:', error);
+                }
+            });
+
+            // Handle controller change (user confirmed update)
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                console.log('Service Worker activated');
+                // Optionally reload the page when a new version is activated
+                // window.location.reload();
+            });
+        } else {
+            console.warn('Service Workers are not supported in this browser');
+        }
+
+        // Detect if app is installed (PWA)
+        window.addEventListener('beforeinstallprompt', (event) => {
+            console.log('Install prompt available');
+            // Store the event for later use
+            window.deferredPrompt = event;
+            // You can show an install button here
+        });
+
+        window.addEventListener('appinstalled', () => {
+            console.log('App installed as PWA');
+            window.deferredPrompt = null;
+        });
+
+        // Display mode detection
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('App is running in standalone mode (PWA)');
+        }
+    </script>
+
+</body>
+</html>

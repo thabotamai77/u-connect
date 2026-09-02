@@ -1,0 +1,88 @@
+{
+  "name": "U-CONNECT - Student Learning & Safety Platform",
+  "short_name": "U-CONNECT",
+  "description": "One Phone. One Student. Equal Opportunity. Learn anywhere with U-CONNECT.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#071014",
+  "theme_color": "#25b9f3",
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%23071014' width='540' height='720'/><text x='270' y='360' font-size='48' fill='%2325b9f3' text-anchor='middle' dominant-baseline='central' font-family='sans-serif' font-weight='bold'>U-CONNECT</text></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1280 720'><rect fill='%23071014' width='1280' height='720'/><text x='640' y='360' font-size='64' fill='%2325b9f3' text-anchor='middle' dominant-baseline='central' font-family='sans-serif' font-weight='bold'>U-CONNECT</text></svg>",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%2325b9f3' width='192' height='192' rx='45'/><text x='96' y='96' font-size='120' fill='%23071014' text-anchor='middle' dominant-baseline='central' font-family='sans-serif' font-weight='bold'>U</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%2325b9f3' width='192' height='192' rx='45'/><text x='96' y='96' font-size='120' fill='%23071014' text-anchor='middle' dominant-baseline='central' font-family='sans-serif' font-weight='bold'>U</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%2325b9f3' width='512' height='512' rx='120'/><text x='256' y='256' font-size='320' fill='%23071014' text-anchor='middle' dominant-baseline='central' font-family='sans-serif' font-weight='bold'>U</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Learn",
+      "short_name": "Learn",
+      "description": "Access your learning materials",
+      "url": "./index.html?page=learn",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text x='48' y='48' font-size='64' text-anchor='middle' dominant-baseline='central'>📚</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Stay Safe",
+      "short_name": "Safety",
+      "description": "Safety resources and information",
+      "url": "./index.html?page=safety",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text x='48' y='48' font-size='64' text-anchor='middle' dominant-baseline='central'>🛡️</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Get Help",
+      "short_name": "Help",
+      "description": "Emergency and support resources",
+      "url": "./index.html?page=help",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text x='48' y='48' font-size='64' text-anchor='middle' dominant-baseline='central'>🆘</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
