@@ -348,6 +348,26 @@ def create_student():
     return jsonify({"message": "Student saved", "student_id": student_id}), 201
 
 
+@app.route("/api/student/<int:student_id>", methods=["PUT"])
+def update_student(student_id):
+    payload = request.get_json(silent=True) or {}
+    full_name = (payload.get("full_name") or "").strip()
+    if not full_name:
+        return jsonify({"error": "Name is required"}), 400
+
+    conn = get_connection()
+    conn.execute(
+        "UPDATE students SET full_name = ?, email = ?, phone = ? WHERE id = ?",
+        (full_name, payload.get("email"), payload.get("phone"), student_id),
+    )
+    conn.commit()
+    updated = conn.total_changes > 0
+    conn.close()
+    if not updated:
+        return jsonify({"error": "Student account not found"}), 404
+    return jsonify({"message": "Student updated", "student_id": student_id})
+
+
 @app.route("/api/incident", methods=["POST"])
 def create_incident():
     payload = request.get_json(silent=True) or request.form or {}
