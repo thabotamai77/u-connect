@@ -320,6 +320,11 @@ def serve_frontend_index():
     return send_from_directory(str(FRONTEND_DIR), "index.html")
 
 
+@app.route("/<path:filename>")
+def serve_frontend_asset(filename):
+    return send_from_directory(str(FRONTEND_DIR), filename)
+
+
 @app.route("/")
 def root():
     return send_from_directory(str(FRONTEND_DIR), "index.html")
