@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import date
 from pathlib import Path
 
 from flask import Flask, jsonify, request, send_from_directory
@@ -64,6 +65,22 @@ def init_db():
             percentage INTEGER NOT NULL DEFAULT 0,
             updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(student_id) REFERENCES students(id)
+        );
+
+        CREATE TABLE IF NOT EXISTS papers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            grade INTEGER NOT NULL, subject TEXT NOT NULL, title TEXT NOT NULL,
+            file_url TEXT NOT NULL, memo_url TEXT, year INTEGER NOT NULL, term TEXT
+        );
+        CREATE TABLE IF NOT EXISTS timetable (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            grade INTEGER NOT NULL, day TEXT NOT NULL, start_time TEXT NOT NULL,
+            end_time TEXT NOT NULL, subject TEXT NOT NULL, venue TEXT
+        );
+        CREATE TABLE IF NOT EXISTS exams (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            grade INTEGER NOT NULL, subject TEXT NOT NULL, exam_date TEXT NOT NULL,
+            start_time TEXT NOT NULL, duration_min INTEGER NOT NULL, venue TEXT
         );
         """
     )
@@ -159,6 +176,79 @@ def get_progress():
 
 app = Flask(__name__)
 
+CAPS_SUBJECTS = {
+    8: [('English Home Language', True), ('Afrikaans or isiZulu', True), ('Mathematics', True), ('Natural Sciences', True), ('Social Sciences', True), ('Technology', True), ('Life Orientation', True)],
+    9: [('English Home Language', True), ('Afrikaans or isiZulu', True), ('Mathematics', True), ('Natural Sciences', True), ('Social Sciences', True), ('Technology', True), ('Life Orientation', True)],
+    10: [('English Home Language', True), ('Afrikaans or isiZulu', True), ('Mathematics', True), ('Life Orientation', True), ('Physical Sciences', False), ('Life Sciences', False), ('Accounting', False), ('Information Technology', False)],
+    11: [('English Home Language', True), ('Afrikaans or isiZulu', True), ('Mathematics', True), ('Life Orientation', True), ('Physical Sciences', False), ('Life Sciences', False), ('Accounting', False), ('Information Technology', False)],
+    12: [('English Home Language', True), ('Afrikaans or isiZulu', True), ('Mathematics', True), ('Life Orientation', True), ('Physical Sciences', False), ('Life Sciences', False), ('Accounting', False), ('Information Technology', False)],
+}
+
+
+def learn_grade():
+    try:
+        return max(8, min(12, int(request.args.get('grade', 12))))
+    except (TypeError, ValueError):
+        return 12
+
+
+@app.route('/api/subjects')
+def subjects():
+    return jsonify([{'name': name, 'is_compulsory': compulsory} for name, compulsory in CAPS_SUBJECTS[learn_grade()]])
+
+
+@app.route('/api/papers', methods=['GET', 'POST'])
+def papers():
+    if request.method == 'POST':
+        payload = request.get_json(silent=True) or {}
+        fields = [payload.get(key) for key in ('grade', 'subject', 'title', 'file_url', 'year')]
+        if any(value in (None, '') for value in fields):
+            return jsonify({'error': 'Grade, subject, title, file URL and year are required'}), 400
+        conn = get_connection()
+        conn.execute('INSERT INTO papers (grade, subject, title, file_url, memo_url, year, term) VALUES (?, ?, ?, ?, ?, ?, ?)', (*fields, payload.get('memo_url'), payload.get('term')))
+        conn.commit(); conn.close()
+        return jsonify({'message': 'Paper saved'}), 201
+    conn = get_connection(); subject = request.args.get('subject')
+    query = 'SELECT * FROM papers WHERE grade = ?'; params = [learn_grade()]
+    if subject: query += ' AND subject = ?'; params.append(subject)
+    rows = conn.execute(query + ' ORDER BY year DESC, id DESC', params).fetchall(); conn.close()
+    return jsonify([dict(row) for row in rows])
+
+
+@app.route('/api/timetable', methods=['GET', 'POST'])
+def timetable():
+    if request.method == 'POST':
+        payload = request.get_json(silent=True) or {}
+        keys = ('grade', 'day', 'start_time', 'end_time', 'subject')
+        if any(not payload.get(key) for key in keys): return jsonify({'error': 'All timetable fields are required'}), 400
+        conn = get_connection(); conn.execute('INSERT INTO timetable (grade, day, start_time, end_time, subject, venue) VALUES (?, ?, ?, ?, ?, ?)', tuple(payload.get(key) for key in (*keys, 'venue'))); conn.commit(); conn.close()
+        return jsonify({'message': 'Period saved'}), 201
+    conn = get_connection(); rows = conn.execute('SELECT * FROM timetable WHERE grade = ? ORDER BY day, start_time', (learn_grade(),)).fetchall(); conn.close()
+    return jsonify([dict(row) for row in rows])
+
+
+@app.route('/api/timetable/<int:period_id>', methods=['DELETE'])
+def delete_period(period_id):
+    conn = get_connection(); conn.execute('DELETE FROM timetable WHERE id = ?', (period_id,)); conn.commit(); conn.close()
+    return jsonify({'message': 'Period deleted'})
+
+
+@app.route('/api/exams', methods=['GET', 'POST'])
+def exams():
+    if request.method == 'POST':
+        payload = request.get_json(silent=True) or {}
+        keys = ('grade', 'subject', 'exam_date', 'start_time', 'duration_min')
+        if any(not payload.get(key) for key in keys): return jsonify({'error': 'All exam fields are required'}), 400
+        conn = get_connection(); conn.execute('INSERT INTO exams (grade, subject, exam_date, start_time, duration_min, venue) VALUES (?, ?, ?, ?, ?, ?)', tuple(payload.get(key) for key in (*keys, 'venue'))); conn.commit(); conn.close()
+        return jsonify({'message': 'Exam saved'}), 201
+    conn = get_connection(); rows = conn.execute('SELECT * FROM exams WHERE grade = ? ORDER BY exam_date, start_time', (learn_grade(),)).fetchall(); conn.close()
+    result = []
+    for row in rows:
+        item = dict(row)
+        item['days_left'] = (date.fromisoformat(item['exam_date']) - date.today()).days
+        result.append(item)
+    return jsonify(result)
+
 
 @app.route("/health")
 def health():
@@ -233,6 +323,11 @@ def serve_frontend_index():
 @app.route("/")
 def root():
     return send_from_directory(str(FRONTEND_DIR), "index.html")
+
+
+@app.route("/learn.html")
+def learn_page():
+    return send_from_directory(str(FRONTEND_DIR), "learn.html")
 
 
 if __name__ == "__main__":

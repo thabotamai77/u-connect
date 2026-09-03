@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0B3D2E">
+    <title>U-CONNECT | Learn</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="learn.css">
+</head>
+<body>
+<div class="app">
+    <header class="hero">
+        <a class="back" href="index.html">← U-CONNECT</a>
+        <h1>Learn Hub <span>Grades 8 - 12</span></h1>
+        <label class="grade-picker" for="gradeSelect">Grade
+            <select id="gradeSelect">
+                <option value="8">Grade 8</option>
+                <option value="9">Grade 9</option>
+                <option value="10">Grade 10</option>
+                <option value="11">Grade 11</option>
+                <option value="12" selected>Grade 12</option>
+            </select>
+        </label>
+    </header>
+
+    <nav class="tabs" aria-label="Learn sections">
+        <button class="tab active" data-tab="subjects">📚 Subjects</button>
+        <button class="tab" data-tab="papers">📝 Past Papers</button>
+        <button class="tab" data-tab="timetable">🗓️ Timetable</button>
+        <button class="tab" data-tab="exams">⏳ Exams</button>
+    </nav>
+
+    <section id="subjects" class="panel active">
+        <h2>Your subjects (CAPS)</h2>
+        <p class="hint">Compulsory subjects are marked. Electives depend on your school.</p>
+        <div id="subjectList" class="card-list"></div>
+    </section>
+
+    <section id="papers" class="panel">
+        <h2>Past exam papers</h2>
+        <select id="paperSubject"><option value="">All subjects</option></select>
+        <div id="paperList" class="card-list"></div>
+        <details class="add-box">
+            <summary>➕ Add a paper (admin)</summary>
+            <input id="pTitle" placeholder="Title, e.g. Mathematics Paper 1">
+            <input id="pUrl" placeholder="Paper PDF link">
+            <input id="pMemo" placeholder="Memo PDF link (optional)">
+            <input id="pYear" type="number" placeholder="Year, e.g. 2025">
+            <input id="pTerm" placeholder="Term, e.g. November">
+            <button id="addPaperButton">Save paper</button>
+        </details>
+    </section>
+
+    <section id="timetable" class="panel">
+        <h2>Insert your timetable</h2>
+        <div class="form">
+            <select id="ttDay"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option></select>
+            <input id="ttStart" type="time" value="08:00">
+            <input id="ttEnd" type="time" value="08:45">
+            <select id="ttSubject"></select>
+            <input id="ttVenue" placeholder="Venue (optional)">
+            <button id="addPeriodButton">Add period</button>
+        </div>
+        <div id="ttGrid"></div>
+    </section>
+
+    <section id="exams" class="panel">
+        <h2>Exam countdown</h2>
+        <div class="form">
+            <select id="exSubject"></select>
+            <input id="exDate" type="date">
+            <input id="exTime" type="time" value="09:00">
+            <input id="exDur" type="number" placeholder="Minutes" value="180">
+            <input id="exVenue" placeholder="Venue">
+            <button id="addExamButton">Add exam</button>
+        </div>
+        <div id="examList" class="card-list"></div>
+    </section>
+</div>
+<script src="learn.js"></script>
+</body>
+</html>
