@@ -3,8 +3,8 @@
 
 // API Base URL - update this when deploying to production
 const API_BASE = window.location.hostname === 'localhost' 
-    ? '/api' 
-    : 'https://u-connect-uf4m.onrender.com/api';
+    ? '' 
+    : 'https://u-connect-uf4m.onrender.com';
 
 function openPage(pageName) {
     const pages = document.querySelectorAll(".page");
