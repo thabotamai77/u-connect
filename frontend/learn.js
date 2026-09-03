@@ -6,6 +6,22 @@ const api = (url, options = {}) => fetch(url, options).then(async response => {
 const gradeSelect = document.getElementById('gradeSelect');
 let subjectsCache = [];
 
+const themeButton = document.getElementById('themeBtn');
+const savedTheme = localStorage.getItem('uconnect-theme') || localStorage.getItem('uc-theme');
+if (savedTheme !== 'dark') document.body.classList.add('light-mode');
+function updateThemeButton() {
+    const isLight = document.body.classList.contains('light-mode');
+    themeButton.textContent = isLight ? '🌙' : '☀️';
+    themeButton.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+    themeButton.setAttribute('aria-pressed', String(!isLight));
+}
+updateThemeButton();
+themeButton.addEventListener('click', () => {
+    const isLight = document.body.classList.toggle('light-mode');
+    localStorage.setItem('uconnect-theme', isLight ? 'light' : 'dark');
+    updateThemeButton();
+});
+
 function value(id) { return document.getElementById(id).value; }
 function post(url, body) {
     return api(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
