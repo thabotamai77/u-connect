@@ -174,6 +174,65 @@ def get_progress():
     return [dict(row) for row in rows]
 
 
+def build_learning_plan(student_id=None):
+    """Generate a transparent, local AI-style plan from the student's progress."""
+    conn = get_connection()
+    if student_id:
+        rows = conn.execute(
+            "SELECT subject, percentage FROM progress WHERE student_id = ? ORDER BY updated_at DESC",
+            (student_id,),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            "SELECT subject, percentage FROM progress ORDER BY updated_at DESC"
+        ).fetchall()
+    conn.close()
+
+    progress = {}
+    for row in rows:
+        progress[row["subject"]] = max(0, min(100, int(row["percentage"])))
+
+    if not progress:
+        return {
+            "overall_progress": 0,
+            "focus_subject": "Mathematics",
+            "focus_percentage": 0,
+            "recommendation": "Start with a short Mathematics exercise, then record your result.",
+            "steps": [
+                "Study one concept for 15 minutes.",
+                "Complete two practice questions.",
+                "Record your progress after studying.",
+            ],
+            "reason": "No progress has been recorded yet, so the coach starts with a simple practice session.",
+        }
+
+    weakest_subject, weakest_score = min(progress.items(), key=lambda item: item[1])
+    strongest_subject, strongest_score = max(progress.items(), key=lambda item: item[1])
+    average = round(sum(progress.values()) / len(progress))
+
+    if weakest_score < 50:
+        recommendation = f"Review the basics of {weakest_subject}, then complete three guided exercises."
+    elif weakest_score < 75:
+        recommendation = f"Practise {weakest_subject} with two exam-style questions and review your mistakes."
+    else:
+        recommendation = f"Challenge yourself with an advanced {weakest_subject} question and explain your solution."
+
+    return {
+        "overall_progress": average,
+        "focus_subject": weakest_subject,
+        "focus_percentage": weakest_score,
+        "strongest_subject": strongest_subject,
+        "strongest_percentage": strongest_score,
+        "recommendation": recommendation,
+        "steps": [
+            f"Spend 15 minutes reviewing {weakest_subject}.",
+            "Complete two practice questions without checking the answers.",
+            f"Use {strongest_subject} for a 10-minute confidence-building recap.",
+        ],
+        "reason": "The coach prioritises the subject with the lowest recorded mastery and uses your strongest subject to maintain momentum.",
+    }
+
+
 app = Flask(__name__)
 
 CAPS_SUBJECTS = {
@@ -195,6 +254,12 @@ def learn_grade():
 @app.route('/api/subjects')
 def subjects():
     return jsonify([{'name': name, 'is_compulsory': compulsory} for name, compulsory in CAPS_SUBJECTS[learn_grade()]])
+
+
+@app.route('/api/learning-plan')
+def learning_plan():
+    student_id = request.args.get('student_id')
+    return jsonify(build_learning_plan(student_id))
 
 
 @app.route('/api/papers', methods=['GET', 'POST'])

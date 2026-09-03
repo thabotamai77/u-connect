@@ -27,6 +27,23 @@ async function loadSubjects() {
     document.getElementById('ttSubject').innerHTML = options;
     document.getElementById('exSubject').innerHTML = options;
     document.getElementById('paperSubject').innerHTML = '<option value="">All subjects</option>' + options;
+    await loadStudyCoach();
+}
+
+async function loadStudyCoach() {
+    const recommendation = document.getElementById('coachRecommendation');
+    const steps = document.getElementById('coachSteps');
+    const reason = document.getElementById('coachReason');
+    try {
+        const plan = await api('/api/learning-plan');
+        recommendation.textContent = plan.recommendation;
+        steps.innerHTML = plan.steps.map(step => `<li>${step}</li>`).join('');
+        reason.textContent = plan.reason;
+    } catch (error) {
+        recommendation.textContent = 'Your study plan is not available yet.';
+        steps.innerHTML = '';
+        reason.textContent = error.message;
+    }
 }
 
 async function loadPapers() {
