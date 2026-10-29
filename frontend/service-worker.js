@@ -1,210 +1,73 @@
-// U-CONNECT Service Worker
-// Handles offline caching, background sync, and app shell strategy
-
-const CACHE_NAME = 'uconnect-v1';
+const CACHE_NAME = "uconnect-shell-v2";
 const STATIC_ASSETS = [
-    './',
-    './index.html',
-    './style.css',
-    './app.js',
-    './manifest.json'
+    "./",
+    "./index.html",
+    "./learn.html",
+    "./admin.html",
+    "./admin.js",
+    "./dashboard.js",
+    "./learn.css",
+    "./learn.js",
+    "./auth.js",
+    "./manifest.json"
 ];
 
-// Install event - cache static assets
-self.addEventListener('install', (event) => {
-    console.log('Service Worker: Installing...');
+self.addEventListener("install", (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            console.log('Service Worker: Caching static assets');
-            return cache.addAll(STATIC_ASSETS).catch((error) => {
-                console.warn('Service Worker: Some assets failed to cache', error);
-                // Continue even if some assets fail
-                return Promise.resolve();
-            });
-        })
+        caches.open(CACHE_NAME)
+            .then((cache) => cache.addAll(STATIC_ASSETS))
+            .then(() => self.skipWaiting())
     );
-    self.skipWaiting();
 });
 
-// Activate event - clean up old caches
-self.addEventListener('activate', (event) => {
-    console.log('Service Worker: Activating...');
+self.addEventListener("activate", (event) => {
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('Service Worker: Deleting old cache:', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
+        caches.keys()
+            .then((names) => Promise.all(
+                names.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
+            ))
+            .then(() => self.clients.claim())
     );
-    self.clients.claim();
 });
 
-// Fetch event - Network First, then Cache strategy
-self.addEventListener('fetch', (event) => {
-    const { request } = event;
-
-    // Skip non-GET requests
-    if (request.method !== 'GET') {
+self.addEventListener("fetch", (event) => {
+    const request = event.request;
+    const url = new URL(request.url);
+    if (
+        request.method !== "GET"
+        || url.origin !== self.location.origin
+        || url.pathname.startsWith("/api/")
+    ) {
         return;
     }
 
-    // Handle API requests (Network first, fallback to cache)
-    if (request.url.includes('/api/') || request.url.includes('localhost:')) {
-        event.respondWith(
-            fetch(request)
-                .then((response) => {
-                    // Cache successful API responses
-                    if (response.ok) {
-                        const responseClone = response.clone();
-                        caches.open(CACHE_NAME).then((cache) => {
-                            cache.put(request, responseClone);
-                        });
-                    }
-                    return response;
-                })
-                .catch(() => {
-                    // Fallback to cache if network fails
-                    return caches.match(request).then((cachedResponse) => {
-                        if (cachedResponse) {
-                            console.log('Service Worker: Serving from cache (offline)', request.url);
-                            return cachedResponse;
-                        }
-                        // Return offline page or placeholder
-                        return new Response('Offline - content not available', {
-                            status: 503,
-                            statusText: 'Service Unavailable',
-                            headers: new Headers({
-                                'Content-Type': 'text/plain'
-                            })
-                        });
-                    });
-                })
-        );
-        return;
-    }
-
-    // Handle static assets (Cache first, then Network)
     event.respondWith(
-        caches.match(request).then((cachedResponse) => {
-            if (cachedResponse) {
-                return cachedResponse;
+        caches.match(request).then((cached) => cached || fetch(request).then((response) => {
+            if (response.ok && response.type === "basic") {
+                const copy = response.clone();
+                caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
             }
-            return fetch(request)
-                .then((response) => {
-                    // Cache successful responses
-                    if (!response || response.status !== 200) {
-                        return response;
-                    }
-                    const responseClone = response.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(request, responseClone);
-                    });
-                    return response;
-                })
-                .catch(() => {
-                    console.log('Service Worker: Fetch failed for', request.url);
-                    return new Response('Offline', {
-                        status: 503,
-                        statusText: 'Service Unavailable'
-                    });
-                });
-        })
+            return response;
+        }))
     );
 });
 
-// Background Sync - sync data when connection is restored
-self.addEventListener('sync', (event) => {
-    console.log('Service Worker: Background sync event', event.tag);
-    if (event.tag === 'sync-progress') {
-        event.waitUntil(syncProgress());
-    }
+self.addEventListener("push", (event) => {
+    if (!event.data) return;
+    const data = event.data.json();
+    event.waitUntil(self.registration.showNotification(data.title || "U-CONNECT", {
+        body: data.body || "You have a new U-CONNECT notification.",
+        tag: data.tag || "uconnect-notification",
+        data: data.data || {}
+    }));
 });
 
-// Sync helper function
-async function syncProgress() {
-    try {
-        // Get pending progress updates from IndexedDB or localStorage
-        const pendingUpdates = JSON.parse(
-            localStorage.getItem('pendingProgressUpdates') || '[]'
-        );
-
-        if (pendingUpdates.length === 0) {
-            return;
-        }
-
-        // Send all pending updates to the server
-        for (const update of pendingUpdates) {
-            await fetch('/api/progress', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(update)
-            });
-        }
-
-        // Clear pending updates after successful sync
-        localStorage.removeItem('pendingProgressUpdates');
-        console.log('Service Worker: Synced all pending updates');
-    } catch (error) {
-        console.error('Service Worker: Sync failed', error);
-        // Retry later
-        throw error;
-    }
-}
-
-// Push notification handler (for future push features)
-self.addEventListener('push', (event) => {
-    console.log('Service Worker: Push notification received', event);
-    if (event.data) {
-        const data = event.data.json();
-        const options = {
-            body: data.body || 'U-CONNECT notification',
-            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect fill="%2325b9f3" width="192" height="192" rx="45"/><text x="96" y="96" font-size="120" fill="%23071014" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-weight="bold">U</text></svg>',
-            badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><circle fill="%2325b9f3" cx="48" cy="48" r="48"/></svg>',
-            tag: data.tag || 'uconnect-notification',
-            requireInteraction: data.requireInteraction || false,
-            data: data.data || {}
-        };
-
-        event.waitUntil(
-            self.registration.showNotification(data.title || 'U-CONNECT', options)
-        );
-    }
-});
-
-// Notification click handler
-self.addEventListener('notificationclick', (event) => {
-    console.log('Service Worker: Notification clicked', event.notification.tag);
+self.addEventListener("notificationclick", (event) => {
     event.notification.close();
-
-    // Open the app when notification is clicked
     event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-            // Look for an already-open window
-            for (let i = 0; i < clientList.length; i++) {
-                const client = clientList[i];
-                if (client.url === '/' && 'focus' in client) {
-                    return client.focus();
-                }
-            }
-            // If not open, open a new window
-            if (clients.openWindow) {
-                return clients.openWindow('./');
-            }
+        self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+            const existing = clients.find((client) => new URL(client.url).origin === self.location.origin);
+            return existing ? existing.focus() : self.clients.openWindow("./");
         })
     );
 });
-
-// Message handler - for communication with the app
-self.addEventListener('message', (event) => {
-    console.log('Service Worker: Message received', event.data);
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-        self.skipWaiting();
-    }
-});
-
-console.log('Service Worker: Loaded successfully');

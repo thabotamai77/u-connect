@@ -1,178 +1,64 @@
-# U-CONNECT Deployment Guide - Render
+# U-CONNECT deployment and operations
 
-## 📋 Pre-Deployment Checklist
+## What this release changes
 
-✅ **Files ready for deployment:**
-- `requirements.txt` — Python dependencies
-- `render.yaml` — Infrastructure configuration
-- `.gitignore` — Excluded files
-- `backend/app.py` — Updated for production
-- `frontend/` — Mobile-responsive PWA ready
-- `database/` — SQLite database
+U-CONNECT now requires a server session for student profiles, learning progress, timetables, exams, reports, and school content. Student registration is school-code scoped and requires email verification. Administrator accounts are provisioned through a private Flask CLI prompt; public registration cannot choose a privileged role. Mutating API calls require a session CSRF token. User-specific API responses are not cacheable, and the service worker caches only the static app shell.
 
----
+Existing SQLite records without an account and school association are retained but are not exposed through authenticated student or school queries. Review and migrate legitimate legacy data under an approved school/account mapping before exposing it.
 
-## 🚀 Step 1: Push to GitHub
+## Render configuration
 
-1. **Initialize git** (if not already done):
-   ```bash
-   cd "c:\Users\Thabo\OneDrive\Desktop\Internship\app project\app"
-   git init
-   git add .
-   git commit -m "Initial commit: U-CONNECT PWA ready for deployment"
-   ```
+The included `render.yaml` configures Gunicorn, a generated `UCONNECT_SECRET_KEY`, secure cookies, a public verification URL, and SMTP settings as secrets to be entered in Render. Set these SMTP environment variables in the Render dashboard before enabling registration:
 
-2. **Create GitHub repo:**
-   - Go to [github.com/new](https://github.com/new)
-   - Create a new repository named `uconnect-app`
-   - Copy the commands to push your code:
-   ```bash
-   git remote add origin https://github.com/YOUR_USERNAME/uconnect-app.git
-   git branch -M main
-   git push -u origin main
-   ```
+- `UCONNECT_SMTP_HOST`
+- `UCONNECT_SMTP_USERNAME` and `UCONNECT_SMTP_PASSWORD` when required
+- `UCONNECT_EMAIL_FROM` to a sender accepted by your mail provider
+- Optionally `UCONNECT_SMTP_PORT` (default `587`) and `UCONNECT_SMTP_USE_SSL=1` for implicit TLS
 
----
+Registration returns an explicit error and leaves accounts unverified if email is unavailable. Test delivery and expiry using the actual provider before launch. The verification token is never returned by the public API.
 
-## 🌐 Step 2: Deploy on Render
+Create each school and its first administrator from a trusted deployment shell:
 
-1. **Sign up (free):**
-   - Go to [render.com](https://render.com)
-   - Click "Sign up"
-   - Sign in with GitHub (easiest)
-
-2. **Create new Web Service:**
-   - Click "New +" → "Web Service"
-   - Connect your GitHub account
-   - Select `uconnect-app` repository
-   - Click "Connect"
-
-3. **Configure deployment:**
-
-   | Setting | Value |
-   |---------|-------|
-   | **Name** | `uconnect-app` |
-   | **Environment** | `Python 3` |
-   | **Build Command** | `pip install -r requirements.txt` |
-   | **Start Command** | `gunicorn backend.app:app` |
-   | **Plan** | Free (0.50 USD/month) |
-
-4. **Environment Variables:**
-   - Click "Environment"
-   - Add these variables:
-     ```
-     FLASK_ENV = production
-     PYTHON_VERSION = 3.11.0
-     ```
-
-5. **Deploy:**
-   - Click "Create Web Service"
-   - Wait 2-5 minutes for deployment
-   - You'll get a URL like: `https://uconnect-app.onrender.com`
-
----
-
-## ✅ Step 3: Test Deployment
-
-Once deployed, test these endpoints:
-
-```bash
-# Health check
-curl https://uconnect-app.onrender.com/health
-
-# Get announcements
-curl https://uconnect-app.onrender.com/api/announcements
-
-# Get students
-curl https://uconnect-app.onrender.com/api/students
-
-# Create a student
-curl -X POST https://uconnect-app.onrender.com/api/student \
-  -H "Content-Type: application/json" \
-  -d '{"full_name":"John Doe","email":"john@example.com"}'
+```powershell
+python -m flask --app backend.app create-school
+python -m flask --app backend.app create-admin
 ```
 
----
+The school code is a registration selector, not an administrator credential. Distribute it only to the intended school community. Administrator passwords are entered through a hidden terminal prompt. Never expose a web endpoint for creating or promoting administrators.
 
-## 🔗 Step 4: Update Frontend Configuration
+## Persistence and availability
 
-Update your `frontend/app.js` to point to the new backend:
+The default SQLite database is `database\unconnect.db`. Render's free web-service filesystem is ephemeral; **do not use the free plan for real accounts or student records**. Before production, configure durable persistent storage supported by the selected plan, point `UCONNECT_DATABASE` at that mount, and verify backups and restore. For multiple instances or higher write volume, migrate to a managed relational database and run migrations as a deployment step.
 
-```javascript
-// At the top of app.js, add:
-const API_BASE = 'https://uconnect-app.onrender.com';
+Set `UCONNECT_COOKIE_SECURE=1`, serve only over HTTPS, keep the generated secret private, restrict database and backup access, and use a production WSGI server (the Render command uses Gunicorn). Do not enable Flask debug mode in production.
 
-// Replace all fetch calls from:
-fetch('/api/...')
+## Local development and tests
 
-// To:
-fetch(API_BASE + '/api/...')
+From the repository root in PowerShell:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r .\requirements.txt
+$env:UCONNECT_SECRET_KEY = [Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(48))
+$env:UCONNECT_COOKIE_SECURE = "0"
+python -m flask --app backend.app create-school
+python -m flask --app backend.app create-admin
+python -m flask --app backend.app run
 ```
 
----
+For automated checks:
 
-## 🌍 Step 5: Set Up Custom Domain (Optional)
+```powershell
+python -m unittest discover -s .\backend -p "test_*.py" -v
+node --check .\frontend\auth.js
+node --check .\frontend\learn.js
+node --check .\frontend\service-worker.js
+```
 
-1. Buy domain from [Namecheap.com](https://namecheap.com) (~$3-4/year)
-   - Search for domain like `uconnect-za.com`
-   - Add to cart and checkout
+## Safety and launch limitations
 
-2. On Render dashboard:
-   - Go to Settings → Custom Domain
-   - Add your domain
-   - Render gives you nameserver info
-   - Update nameservers on Namecheap
+The Stay Safe page contains emergency guidance, but U-CONNECT does not dispatch alerts or share a user's location. This is stated in the interface; users must contact local emergency services or a trusted adult directly. Reports are visible to administrators at the reporting school. The current app is not an anonymous or confidential counselling channel and must not be presented as one.
 
-3. Wait 24-48 hours for DNS to propagate
+This release does not provide a complete safeguarding/escalation process, payment processing, Trusted Adult workflow, teacher upload workflow beyond administrator-managed paper links, or age/guardian consent handling. Do not launch to minors or collect sensitive safeguarding reports until qualified safeguarding, privacy, and legal owners approve those workflows. No payment test mode is represented as a real transaction.
 
----
-
-## 🔐 Step 6: Enable HTTPS (Automatic on Render)
-
-✅ **Already included** — Render automatically provides SSL/TLS certificate
-
-Your app is now secure: `https://uconnect-app.onrender.com`
-
----
-
-## 📝 Important Notes
-
-- **Free Tier Limits:**
-  - 750 hours/month (30+ days of uptime)
-  - Deploys sleep after 15 min of inactivity (wake in 30s)
-  - 0.5GB RAM
-
-- **Database Persistence:**
-  - SQLite file stored on disk
-  - Data persists between deployments
-  - Backup regularly to cloud storage (Google Drive, etc.)
-
-- **Auto-deploy:**
-  - Every push to `main` branch auto-deploys
-  - Check "Deploy on push" in settings
-
-- **Logs:**
-  - View in Render dashboard → Logs tab
-  - Check for errors during startup
-
----
-
-## 🆘 Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| **"Build failed"** | Check logs, ensure `requirements.txt` is in root directory |
-| **"Port already in use"** | Render handles this automatically |
-| **"Database not found"** | First run creates it, check file permissions |
-| **"CORS errors"** | Add `Flask-CORS` to handle cross-origin requests |
-
----
-
-## 🚀 Next Steps
-
-1. ✅ Deploy backend to Render (this guide)
-2. ⏭️ Register domain name (Namecheap)
-3. ⏭️ Configure SSL/HTTPS (Automatic on Render)
-4. ⏭️ Promote and share with users!
-
-**Your app is now mobile-first, offline-capable, and cloud-deployed!** 🎉
+Production launch still requires SMTP configuration and verification, durable storage and restore testing, school/admin provisioning, dependency/security review, and a deployment smoke test on the actual Render service.

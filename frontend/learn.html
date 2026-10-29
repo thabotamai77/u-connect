@@ -9,9 +9,33 @@
     <link rel="stylesheet" href="learn.css">
 </head>
 <body>
-<div class="app">
+<div id="authGate" class="auth-gate" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="auth-card">
+        <h1 id="authTitle">Sign in to U-CONNECT</h1>
+        <p>Sign in to access your learning and support tools.</p>
+        <p id="authMessage" class="auth-message" aria-live="polite" hidden></p>
+        <form id="loginForm">
+            <label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+            <label>Password<input name="password" type="password" autocomplete="current-password" required maxlength="128"></label>
+            <button type="submit">Sign in</button>
+            <button type="button" class="auth-link" id="showRegister">Create a student account</button>
+            <button type="button" class="auth-link" id="resendVerification">Resend verification email</button>
+        </form>
+        <form id="registerForm" hidden>
+            <label>Your name<input name="name" autocomplete="name" required maxlength="80"></label>
+            <label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+            <label>School<select name="school" required><option value="">Loading schools…</option></select></label>
+            <label>Password (at least 12 characters)<input name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required></label>
+            <button type="submit">Create account</button>
+            <button type="button" class="auth-link" id="showLogin">Already have an account? Sign in</button>
+        </form>
+        <p class="auth-safety">For emergencies, contact local emergency services or a trusted adult. U-CONNECT does not dispatch emergency help.</p>
+    </div>
+</div>
+<div class="app" id="appShell" inert>
     <header class="hero">
         <a class="back" href="index.html">← U-CONNECT</a>
+        <span class="auth-controls" id="authControls" hidden><span id="authIdentity"></span><a data-admin-only href="admin.html" hidden>Manage reports</a><button id="logoutButton" type="button">Sign out</button></span>
         <div class="hero-heading"><h1>Learn Hub <span>Grades 8 - 12</span></h1><button id="themeBtn" class="theme-button" aria-label="Switch to dark mode" aria-pressed="false">🌙</button></div>
         <label class="grade-picker" for="gradeSelect">Grade
             <select id="gradeSelect">
@@ -47,7 +71,7 @@
         <h2>Past exam papers</h2>
         <select id="paperSubject"><option value="">All subjects</option></select>
         <div id="paperList" class="card-list"></div>
-        <details class="add-box">
+        <details class="add-box" data-admin-only hidden>
             <summary>➕ Add a paper (admin)</summary>
             <input id="pTitle" placeholder="Title, e.g. Mathematics Paper 1">
             <input id="pUrl" placeholder="Paper PDF link">
@@ -84,6 +108,7 @@
         <div id="examList" class="card-list"></div>
     </section>
 </div>
+<script src="auth.js"></script>
 <script src="learn.js"></script>
 </body>
 </html>

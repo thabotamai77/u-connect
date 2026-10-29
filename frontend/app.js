@@ -2,9 +2,7 @@
 // Student Safety & Campus App
 
 // API Base URL - update this when deploying to production
-const API_BASE = window.location.hostname === 'localhost' 
-    ? '' 
-    : 'https://u-connect-uf4m.onrender.com';
+const API_BASE = '';
 
 function openPage(pageName) {
     const pages = document.querySelectorAll(".page");
@@ -93,38 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================
 
     function sendEmergencyAlert() {
-
-        // Get user's location if supported
-        if (navigator.geolocation) {
-
-            navigator.geolocation.getCurrentPosition(
-                position => {
-
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-
-                    console.log("Emergency location:", latitude, longitude);
-
-                    alert(
-                        "🚨 Emergency alert sent!\n\n" +
-                        "Your location has been recorded."
-                    );
-
-                    // Later we can send this information
-                    // to your Python backend.
-                },
-
-                () => {
-                    alert(
-                        "🚨 Emergency alert sent!\n\n" +
-                        "Location permission was not available."
-                    );
-                }
-            );
-
-        } else {
-            alert("🚨 Emergency alert sent!");
-        }
+        alert(
+            "U-CONNECT does not dispatch emergency alerts or share your location. " +
+            "If you are in danger, call local emergency services or contact a trusted adult now."
+        );
     }
 
 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0B3D2E">
+    <title>U-CONNECT | School administration</title>
+    <link rel="stylesheet" href="learn.css">
+</head>
+<body>
+<div id="authGate" class="auth-gate" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="auth-card">
+        <h1 id="authTitle">Sign in to U-CONNECT</h1>
+        <p>Administrator sign-in is required to manage school reports.</p>
+        <p id="authMessage" class="auth-message" aria-live="polite" hidden></p>
+        <form id="loginForm">
+            <label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+            <label>Password<input name="password" type="password" autocomplete="current-password" required maxlength="128"></label>
+            <button type="submit">Sign in</button>
+            <button type="button" class="auth-link" id="showRegister">Create a student account</button>
+            <button type="button" class="auth-link" id="resendVerification">Resend verification email</button>
+        </form>
+        <form id="registerForm" hidden>
+            <label>Your name<input name="name" autocomplete="name" required maxlength="80"></label>
+            <label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+            <label>School<select name="school" required><option value="">Loading schools…</option></select></label>
+            <label>Password (at least 12 characters)<input name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required></label>
+            <button type="submit">Create account</button>
+            <button type="button" class="auth-link" id="showLogin">Already have an account? Sign in</button>
+        </form>
+        <p class="auth-safety">For emergencies, contact local emergency services or a trusted adult. U-CONNECT does not dispatch emergency help.</p>
+    </div>
+</div>
+<main class="app" id="appShell" inert>
+    <header class="hero">
+        <a class="back" href="index.html">← U-CONNECT</a>
+        <span class="auth-controls" id="authControls" hidden>
+            <span id="authIdentity"></span>
+            <button id="logoutButton" type="button">Sign out</button>
+        </span>
+        <h1>School reports</h1>
+        <p class="hint">Only reports for your school are shown. Reports are not an emergency service.</p>
+    </header>
+    <section class="panel active">
+        <p id="adminMessage" class="hint" role="status">Loading reports…</p>
+        <div id="reportsList" class="card-list"></div>
+    </section>
+</main>
+<script src="auth.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

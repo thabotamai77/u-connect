@@ -5,6 +5,17 @@ const api = (url, options = {}) => fetch(url, options).then(async response => {
 });
 const gradeSelect = document.getElementById('gradeSelect');
 let subjectsCache = [];
+const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+})[character]);
+const safeHttpsUrl = value => {
+    try {
+        const url = new URL(value, window.location.origin);
+        return url.protocol === 'https:' ? escapeHtml(url.href) : '#';
+    } catch {
+        return '#';
+    }
+};
 
 const themeButton = document.getElementById('themeBtn');
 const savedTheme = localStorage.getItem('uconnect-theme') || localStorage.getItem('uc-theme');
@@ -37,9 +48,9 @@ document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', (
 async function loadSubjects() {
     subjectsCache = await api('/api/subjects?grade=' + value('gradeSelect'));
     document.getElementById('subjectList').innerHTML = subjectsCache.map(subject => `
-        <div class="card"><span class="title">${subject.name}</span>
+        <div class="card"><span class="title">${escapeHtml(subject.name)}</span>
         <span class="badge">${subject.is_compulsory ? 'Compulsory' : 'Elective'}</span></div>`).join('');
-    const options = subjectsCache.map(subject => `<option value="${subject.name}">${subject.name}</option>`).join('');
+    const options = subjectsCache.map(subject => `<option value="${escapeHtml(subject.name)}">${escapeHtml(subject.name)}</option>`).join('');
     document.getElementById('ttSubject').innerHTML = options;
     document.getElementById('exSubject').innerHTML = options;
     document.getElementById('paperSubject').innerHTML = '<option value="">All subjects</option>' + options;
@@ -53,7 +64,7 @@ async function loadStudyCoach() {
     try {
         const plan = await api('/api/learning-plan');
         recommendation.textContent = plan.recommendation;
-        steps.innerHTML = plan.steps.map(step => `<li>${step}</li>`).join('');
+        steps.innerHTML = plan.steps.map(step => `<li>${escapeHtml(step)}</li>`).join('');
         reason.textContent = plan.reason;
     } catch (error) {
         recommendation.textContent = 'Your study plan is not available yet.';
@@ -67,10 +78,10 @@ async function loadPapers() {
     const query = `/api/papers?grade=${value('gradeSelect')}${subject ? '&subject=' + encodeURIComponent(subject) : ''}`;
     const rows = await api(query);
     document.getElementById('paperList').innerHTML = rows.length ? rows.map(paper => `
-        <div class="card"><div class="title">${paper.title}</div>
-        <div class="meta">${paper.subject} • ${paper.year}${paper.term ? ' • ' + paper.term : ''}</div>
-        <div class="meta"><a href="${paper.file_url}" target="_blank" rel="noopener">📄 Paper</a>
-        ${paper.memo_url ? ` &nbsp; <a href="${paper.memo_url}" target="_blank" rel="noopener">✅ Memo</a>` : ''}</div></div>`).join('') : '<p class="hint">No papers yet for this grade and subject.</p>';
+        <div class="card"><div class="title">${escapeHtml(paper.title)}</div>
+        <div class="meta">${escapeHtml(paper.subject)} • ${escapeHtml(paper.year)}${paper.term ? ' • ' + escapeHtml(paper.term) : ''}</div>
+        <div class="meta"><a href="${safeHttpsUrl(paper.file_url)}" target="_blank" rel="noopener">📄 Paper</a>
+        ${paper.memo_url ? ` &nbsp; <a href="${safeHttpsUrl(paper.memo_url)}" target="_blank" rel="noopener">✅ Memo</a>` : ''}</div></div>`).join('') : '<p class="hint">No papers yet for this grade and subject.</p>';
 }
 
 async function addPaper() {
@@ -87,10 +98,10 @@ async function loadTimetable() {
     const days = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
     document.getElementById('ttGrid').innerHTML = days.map(day => {
         const periods = rows.filter(row => row.day === day);
-        return `<div class="day-block"><h3>${day}</h3>${periods.length ? periods.map(period => `
-            <div class="card"><button class="danger" onclick="delPeriod(${period.id})" aria-label="Delete period">✕</button>
-            <div class="title">${period.start_time} - ${period.end_time} · ${period.subject}</div>
-            ${period.venue ? `<div class="meta">📍 ${period.venue}</div>` : ''}</div>`).join('') : '<p class="hint">No periods</p>'}</div>`;
+        return `<div class="day-block"><h3>${escapeHtml(day)}</h3>${periods.length ? periods.map(period => `
+            <div class="card"><button class="danger" data-delete-period="${period.id}" aria-label="Delete period">✕</button>
+            <div class="title">${escapeHtml(period.start_time)} - ${escapeHtml(period.end_time)} · ${escapeHtml(period.subject)}</div>
+            ${period.venue ? `<div class="meta">📍 ${escapeHtml(period.venue)}</div>` : ''}</div>`).join('') : '<p class="hint">No periods</p>'}</div>`;
     }).join('');
 }
 async function addPeriod() {
@@ -99,14 +110,22 @@ async function addPeriod() {
     await loadTimetable();
 }
 async function delPeriod(id) { await api('/api/timetable/' + id, {method: 'DELETE'}); await loadTimetable(); }
-window.delPeriod = delPeriod;
+document.getElementById('ttGrid').addEventListener('click', event => {
+    const button = event.target.closest('[data-delete-period]');
+    if (button) delPeriod(button.dataset.deletePeriod).catch(error => {
+        document.querySelector('.panel.active').insertAdjacentHTML(
+            'beforeend',
+            `<p class="hint error">${escapeHtml(error.message)}</p>`
+        );
+    });
+});
 document.getElementById('addPeriodButton').addEventListener('click', addPeriod);
 
 async function loadExams() {
     const rows = await api('/api/exams?grade=' + value('gradeSelect'));
     document.getElementById('examList').innerHTML = rows.length ? rows.map(exam => `
-        <div class="card"><div class="title">${exam.subject}</div>
-        <div class="meta">📅 ${exam.exam_date} at ${exam.start_time} • ⏱️ ${exam.duration_min} min${exam.venue ? ' • 📍 ' + exam.venue : ''}</div>
+        <div class="card"><div class="title">${escapeHtml(exam.subject)}</div>
+        <div class="meta">📅 ${escapeHtml(exam.exam_date)} at ${escapeHtml(exam.start_time)} • ⏱️ ${escapeHtml(exam.duration_min)} min${exam.venue ? ' • 📍 ' + escapeHtml(exam.venue) : ''}</div>
         <div class="count">${exam.days_left > 0 ? exam.days_left + ' days left' : exam.days_left === 0 ? 'TODAY!' : 'Done'}</div></div>`).join('') : '<p class="hint">No exams added yet.</p>';
 }
 async function addExam() {
@@ -119,7 +138,7 @@ document.getElementById('addExamButton').addEventListener('click', addExam);
 
 async function refresh() {
     try { await loadSubjects(); await Promise.all([loadPapers(), loadTimetable(), loadExams()]); }
-    catch (error) { document.querySelector('.panel.active').insertAdjacentHTML('beforeend', `<p class="hint error">${error.message}</p>`); }
+    catch (error) { document.querySelector('.panel.active').insertAdjacentHTML('beforeend', `<p class="hint error">${escapeHtml(error.message)}</p>`); }
 }
 gradeSelect.addEventListener('change', refresh);
 refresh();

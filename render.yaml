@@ -10,3 +10,17 @@ services:
         value: 3.11.0
       - key: FLASK_ENV
         value: production
+      - key: UCONNECT_SECRET_KEY
+        generateValue: true
+      - key: UCONNECT_COOKIE_SECURE
+        value: "1"
+      - key: UCONNECT_PUBLIC_BASE_URL
+        sync: false
+      - key: UCONNECT_SMTP_HOST
+        sync: false
+      - key: UCONNECT_SMTP_USERNAME
+        sync: false
+      - key: UCONNECT_SMTP_PASSWORD
+        sync: false
+      - key: UCONNECT_EMAIL_FROM
+        sync: false
