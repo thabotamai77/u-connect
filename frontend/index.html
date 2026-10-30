@@ -1,46 +1,224 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0B3D2E">
-<meta name="description" content="One Phone. One Student. Equal Opportunity.">
-<title>U-CONNECT</title>
-<link rel="manifest" href="manifest.json">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{--green:#0E9F6E;--dark:#0B3D2E;--deep:#07271E;--gold:#F6C445;--red:#E23A3A;--blue:#1F6FEB;--bg:#F4F7F5;--card:#FFF;--ink:#12241D;--muted:#5E7269;--line:#E4ECE8;--shadow:0 2px 12px rgba(11,61,46,.08);--radius:20px}
-[data-theme=dark]{--bg:#0C1A15;--card:#132720;--ink:#EDF5F1;--muted:#93A89F;--line:#1E3A30;--shadow:0 2px 14px rgba(0,0,0,.35)}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}html{scroll-behavior:smooth}body{font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;transition:.3s}a{color:inherit;text-decoration:none}button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}.wrap{max-width:960px;margin:auto;padding:0 18px 110px}
-.hero{position:relative;overflow:hidden;background:linear-gradient(150deg,var(--deep),var(--dark) 55%,var(--green) 120%);color:#fff;padding:22px 0 90px;border-radius:0 0 32px 32px}.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;opacity:.16}.hero:before{width:220px;height:220px;background:var(--gold);top:-90px;right:-60px}.hero:after{width:160px;height:160px;background:var(--red);bottom:-70px;left:-50px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-size:1.15rem;font-weight:800}.flag{font-size:1.4rem}.pill{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border:1px solid #ffffff38;border-radius:999px;background:#ffffff24;color:#fff;font-size:.78rem;font-weight:600}.dot{width:8px;height:8px;border-radius:50%;background:#4ADE80;animation:pulse 2s infinite}@keyframes pulse{70%{box-shadow:0 0 0 8px #4ade8000}}.greet{margin-top:26px}.greet .hi{font-size:1rem;opacity:.9}.greet h1{font-size:clamp(1.7rem,6vw,2.4rem);line-height:1.15;margin-top:5px}.greet p{font-size:.85rem;opacity:.75;margin-top:8px}
-.progress-card{position:relative;z-index:2;margin-top:-58px;padding:18px 20px;display:flex;align-items:center;gap:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.ring{position:relative;width:76px;height:76px;flex:none}.ring svg{transform:rotate(-90deg)}.ring .bg{stroke:var(--line)}.ring .fg{stroke:url(#grad);stroke-linecap:round;transition:stroke-dashoffset 1s}.ring .pct{position:absolute;inset:0;display:grid;place-items:center;font-weight:800}.pc-text h2{font-size:1rem}.pc-text p{font-size:.8rem;color:var(--muted);margin-top:3px}.fire{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;background:#0e9f6e1f;color:var(--green);font-size:.75rem;font-weight:700}
-section{margin-top:34px}.sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}.sec-head h2{font-size:1.15rem}.view,.go{color:var(--green);font-size:.78rem;font-weight:700}.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.action,.card,.profile{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.action{padding:18px 16px;display:flex;flex-direction:column;gap:10px;transition:transform .15s}.action:active,.card:active{transform:scale(.97)}.action .ic{width:44px;height:44px;display:grid;place-items:center;border-radius:14px;font-size:1.25rem;background:#0e9f6e24}.action:nth-child(2) .ic{background:#1f6feb21}.action:nth-child(3) .ic{background:#e23a3a1f}.action:nth-child(4) .ic{background:#f6c44530}.action b{font-size:.98rem}.action span,.card p{font-size:.76rem;color:var(--muted)}
-.thought{padding:16px 18px;border:1px dashed #0e9f6e66;border-radius:var(--radius);background:linear-gradient(135deg,#f6c44529,#0e9f6e1f);font-size:.88rem;font-weight:600;line-height:1.55}.thought small{display:block;margin-top:6px;color:var(--muted);font-size:.72rem;font-weight:500}.hscroll{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 10px;scroll-snap-type:x mandatory;scrollbar-width:none}.hscroll::-webkit-scrollbar{display:none}.card{scroll-snap-align:start;flex:0 0 78%;max-width:300px;padding:18px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}.card .ic{font-size:1.6rem}.card h3{font-size:.95rem}.card .go{margin-top:6px;align-self:flex-start}.card.accent{background:linear-gradient(140deg,var(--green),var(--dark));color:#fff;border:0}.card.accent p{color:#ffffffcc}.card.accent .go{color:var(--gold)}.profile{padding:20px;display:flex;flex-direction:column;gap:16px}.p-row{display:flex;align-items:center;gap:14px}.avatar{width:56px;height:56px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(140deg,var(--green),var(--blue));font-size:1.5rem}.p-row p{font-size:.78rem;color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{padding:12px 8px;text-align:center;border:1px solid var(--line);border-radius:14px;background:var(--bg)}.stat b{display:block;font-size:1.25rem}.stat span{font-size:.68rem;color:var(--muted);font-weight:600;text-transform:uppercase}
-nav.tabs{position:fixed;z-index:50;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:10px 8px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);box-shadow:0 -4px 20px #0b3d2e14}.tabs a{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 14px;border-radius:12px;color:var(--muted);font-size:.64rem;font-weight:700}.tabs a.active{color:var(--green)}.ti{font-size:1.25rem}.theme{padding:7px 10px}
-@media(min-width:760px){.hero{padding-bottom:100px;border-radius:0 0 40px 40px}.actions{grid-template-columns:repeat(4,1fr)}.hscroll{display:grid;grid-template-columns:repeat(2,1fr)}.card{max-width:none}.tabs{top:14px;bottom:auto!important;left:50%!important;right:auto!important;transform:translateX(-50%);width:auto;border-radius:999px;padding:8px 14px!important}.wrap{padding-bottom:80px}}
-@media(max-width:380px){.wrap{padding-left:12px;padding-right:12px}.actions{grid-template-columns:1fr}.progress-card{gap:12px;padding:16px}.pc-text p{font-size:.72rem}}.profile-form{display:grid;gap:8px;margin-top:2px}.profile-form input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}.profile-form button{padding:12px;border-radius:10px;background:var(--green);color:#fff;font-weight:800}.profile-form small{min-height:18px;color:var(--muted)}
-</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7f4">
+    <title>U-Connect | Student support, connected</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-<header class="hero"><div class="wrap"><div class="topbar"><div class="brand">U-CONNECT <span class="flag">🇿🇦</span></div><div><span class="pill" id="connectionStatus"><span class="dot"></span>Online</span><button class="pill theme" id="themeBtn" aria-label="Toggle dark mode">🌙</button></div></div><div class="greet"><div class="hi">👋 Welcome back</div><h1 id="greeting">Student,<br>what do you need?</h1><p>One Phone. One Student. Equal Opportunity.</p></div></div></header>
-<main class="wrap">
-<div class="progress-card"><div class="ring" role="img" aria-label="Learning progress 35 percent"><svg width="76" height="76" viewBox="0 0 76 76"><defs><linearGradient id="grad"><stop stop-color="#0E9F6E"/><stop offset="1" stop-color="#1F6FEB"/></linearGradient></defs><circle class="bg" cx="38" cy="38" r="32" fill="none" stroke-width="8"/><circle class="fg" id="ringFg" cx="38" cy="38" r="32" fill="none" stroke-width="8" stroke-dasharray="201" stroke-dashoffset="201"/></svg><div class="pct" id="pct">0%</div></div><div class="pc-text"><h2>📈 Learning Progress</h2><p>Keep going — every lesson counts.</p><span class="fire">You've got this! 🔥</span></div></div>
-<section><div class="sec-head"><h2>⚡ Quick Actions</h2></div><div class="actions"><a class="action" href="learn.html"><div class="ic">📚</div><b>Learn</b><span>Study anywhere, no laptop needed</span></a><a class="action" href="#safe"><div class="ic">🛡️</div><b>Stay Safe</b><span>Safety information & awareness</span></a><a class="action" href="#help"><div class="ic">🆘</div><b>Get Help</b><span>Find support when you need it</span></a><a class="action" href="#profile"><div class="ic">👤</div><b>My Profile</b><span>Your account & stats</span></a></div></section>
-<section><div class="thought">💬 “Your future is built by what you do today.”<small>Today's thought</small></div></section>
-<section id="learn"><div class="sec-head"><h2>📚 Learn</h2><a class="view" href="learn.html">Open Learn Hub →</a></div><div class="hscroll"><a class="card" href="learn.html"><div class="ic">💻</div><h3>Information Technology</h3><p>Programming • Networks • Systems</p><span class="go">Start →</span></a><a class="card" href="learn.html"><div class="ic">➗</div><h3>Mathematics</h3><p>Practice • Problems • Quizzes</p><span class="go">Start →</span></a><a class="card" href="learn.html"><div class="ic">📖</div><h3>English</h3><p>Reading • Writing • Communication</p><span class="go">Start →</span></a><a class="card" href="learn.html"><div class="ic">🔬</div><h3>Science</h3><p>Lessons • Experiments • Quizzes</p><span class="go">Start →</span></a></div></section>
-<section id="safe"><div class="sec-head"><h2>🛡️ Stay Safe</h2><a class="view" href="#safe">View all →</a></div><div class="hscroll"><a class="card accent" href="#help"><div class="ic">🚨</div><h3>Need immediate help?</h3><p>In danger? Contact emergency services or a trusted adult right away.</p><span class="go">Get help now →</span></a><a class="card" href="#"><div class="ic">💜</div><h3>GBV Awareness</h3><p>Warning signs and how to seek support.</p><span class="go">Learn →</span></a><a class="card" href="#"><div class="ic">🚫</div><h3>Human Trafficking</h3><p>How it happens and warning signs.</p><span class="go">Learn →</span></a><a class="card" href="#"><div class="ic">🚗</div><h3>Travel Safety</h3><p>Safe travel to and from school.</p><span class="go">Learn →</span></a></div></section>
-<section id="help"><div class="sec-head"><h2>🆘 Get Help</h2></div><div class="hscroll"><a class="card" href="tel:10111"><div class="ic">👨‍🏫</div><h3>Trusted Teacher</h3><p>Contact a teacher or school support person.</p><span class="go">Reach out →</span></a><a class="card" href="#"><div class="ic">👨‍👩‍👧</div><h3>Trusted Adult</h3><p>Speak to someone you trust at home or in your community.</p><span class="go">Reach out →</span></a></div></section>
-<section id="profile"><div class="sec-head"><h2>👤 My Profile</h2></div><div class="profile"><div class="p-row"><div class="avatar">🎓</div><div><h3 id="profileName">Student</h3><p id="profileStatus">Account not saved</p></div></div><div class="stats"><div class="stat"><b id="lessonCount">0</b><span>Lessons</span></div><div class="stat"><b id="quizCount">0</b><span>Updates</span></div><div class="stat"><b id="profileProgress" style="color:var(--green)">0%</b><span>Progress</span></div></div><form id="profileForm" class="profile-form"><input id="profileFullName" placeholder="Full name" autocomplete="name" required><input id="profileEmail" type="email" placeholder="Email (optional)" autocomplete="email"><input id="profilePhone" type="tel" placeholder="Phone (optional)" autocomplete="tel"><button type="submit">Save account</button><small id="profileMessage" aria-live="polite"></small></form></div></section>
-</main>
-<nav class="tabs" aria-label="Main navigation"><a href="learn.html" class="active"><span class="ti">📚</span>Learn</a><a href="#safe"><span class="ti">🛡️</span>Safe</a><a href="#help"><span class="ti">🆘</span>Help</a><a href="#profile"><span class="ti">👤</span>Profile</a></nav>
-<script>
-const ring=document.getElementById('ringFg'),pct=document.getElementById('pct'),target=35,circ=2*Math.PI*32;ring.style.strokeDasharray=circ;setTimeout(()=>ring.style.strokeDashoffset=circ*(1-target/100),250);let value=0;const timer=setInterval(()=>{pct.textContent=++value+'%';if(value>=target)clearInterval(timer)},22);
-const theme=document.getElementById('themeBtn');const savedTheme=localStorage.getItem('uconnect-theme')||localStorage.getItem('uc-theme');if(savedTheme==='dark')document.documentElement.dataset.theme='dark';const updateThemeButton=()=>{const dark=document.documentElement.dataset.theme==='dark';theme.textContent=dark?'☀️':'🌙';theme.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');theme.setAttribute('aria-pressed',dark)};updateThemeButton();theme.addEventListener('click',()=>{const dark=document.documentElement.dataset.theme==='dark';if(dark)delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme='dark';localStorage.setItem('uconnect-theme',dark?'light':'dark');updateThemeButton()});
-const links=document.querySelectorAll('.tabs a'),sections=['learn','safe','help','profile'].map(id=>document.getElementById(id));window.addEventListener('scroll',()=>{let active=0;sections.forEach((section,index)=>{if(section.getBoundingClientRect().top<innerHeight*.5)active=index});links.forEach((link,index)=>link.classList.toggle('active',index===active))},{passive:true});
-fetch('/health').then(response=>{if(!response.ok)throw new Error('Health check failed');return response.json()}).then(()=>{document.getElementById('connectionStatus').innerHTML='<span class="dot"></span>Online'}).catch(()=>{document.getElementById('connectionStatus').textContent='Offline'});
-const profileForm=document.getElementById('profileForm'),profileName=document.getElementById('profileName'),profileStatus=document.getElementById('profileStatus'),profileMessage=document.getElementById('profileMessage');const loadProfile=async()=>{try{const students=await fetch('/api/students').then(response=>response.json());const savedId=localStorage.getItem('studentId');const student=students.students?.find(item=>String(item.id)===String(savedId))||students.students?.[0];if(student){localStorage.setItem('studentId',student.id);profileName.textContent=student.full_name;profileStatus.textContent=student.email||student.phone||'U-CONNECT Student';document.getElementById('profileFullName').value=student.full_name;document.getElementById('profileEmail').value=student.email||'';document.getElementById('profilePhone').value=student.phone||''}}catch(error){profileStatus.textContent='Account unavailable'}};const loadProfileProgress=async()=>{try{const data=await fetch('/api/progress').then(response=>response.json());const entries=data.progress||[];const average=entries.length?Math.round(entries.reduce((sum,item)=>sum+Number(item.percentage||0),0)/entries.length):0;document.getElementById('lessonCount').textContent=entries.length;document.getElementById('quizCount').textContent=entries.length;document.getElementById('profileProgress').textContent=average+'%'}catch(error){profileStatus.textContent='Progress unavailable'}};profileForm.addEventListener('submit',async event=>{event.preventDefault();profileMessage.textContent='Saving...';try{const studentId=localStorage.getItem('studentId');const method=studentId?'PUT':'POST';const url=studentId?'/api/student/'+studentId:'/api/student';const response=await fetch(url,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify({full_name:document.getElementById('profileFullName').value,email:document.getElementById('profileEmail').value||null,phone:document.getElementById('profilePhone').value||null})});const result=await response.json();if(!response.ok)throw new Error(result.error||'Could not save account');localStorage.setItem('studentId',result.student_id);profileMessage.textContent='Account saved';await loadProfile()}catch(error){profileMessage.textContent=error.message}});loadProfile();loadProfileProgress();
-if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(console.error));
-</script>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="site-header">
+        <a class="brand" href="/" aria-label="U-Connect home">
+            <span class="brand-mark" aria-hidden="true">U</span>
+            <span>U-Connect<span class="brand-dot">.</span></span>
+        </a>
+        <nav class="header-nav" aria-label="Main navigation" id="app-navigation" hidden>
+            <button class="nav-link active" data-view="student-view">Student portal</button>
+            <button class="nav-link" data-view="admin-view" id="admin-navigation" hidden>Administration</button>
+        </nav>
+        <div class="header-actions" id="account-actions" hidden>
+            <button id="notification-button" class="icon-button" aria-label="Show notifications" title="Notifications">
+                <span aria-hidden="true">♧</span><span id="notification-count" class="notification-count" hidden>0</span>
+            </button>
+            <button id="profile-button" class="profile-button" aria-label="Edit your profile">
+                <span class="avatar-small" aria-hidden="true">S</span><span id="header-name">Student</span>
+            </button>
+            <button id="logout-button" class="button button-outline">Sign out</button>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section id="auth-panel" class="auth-panel" aria-labelledby="auth-title">
+            <p class="eyebrow">YOUR CAMPUS, CONNECTED</p>
+            <h1 id="auth-title">Welcome to U-Connect</h1>
+            <p class="muted">Sign in to find support and follow your requests.</p>
+            <p id="auth-message" class="form-message" role="status" hidden></p>
+            <form id="login-form" class="auth-form">
+                <h2>Sign in</h2>
+                <label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+                <label>Password<input name="password" type="password" autocomplete="current-password" required maxlength="128"></label>
+                <button class="button button-dark button-full" type="submit">Sign in</button>
+                <button class="text-link auth-switch" id="show-registration" type="button">Create a student account</button>
+                <button class="text-link auth-switch" id="resend-verification" type="button">Resend verification email</button>
+            </form>
+            <form id="registration-form" class="auth-form" hidden>
+                <h2>Create your account</h2>
+                <label>Your name<input name="name" autocomplete="name" required maxlength="80"></label>
+                <label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+                <label>School<select name="school" id="school-select" required><option value="">Loading schools…</option></select></label>
+                <label>Password (at least 12 characters)<input name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required></label>
+                <button class="button button-dark button-full" type="submit">Create account</button>
+                <button class="text-link auth-switch" id="show-login" type="button">Already have an account? Sign in</button>
+            </form>
+            <p class="auth-safety-note">If you are in immediate danger, contact local emergency services or a trusted person now. Do not use this service for emergencies.</p>
+        </section>
+
+        <div id="student-view" class="app-view" hidden>
+            <nav class="tabs" aria-label="Student pages">
+                <button class="tab-link active" type="button" data-page="home" aria-current="page"><span class="tab-icon" aria-hidden="true">🏠</span><span>Home</span></button>
+                <button class="tab-link" type="button" data-page="learn" aria-current="false"><span class="tab-icon" aria-hidden="true">📚</span><span>Learn</span></button>
+                <button class="tab-link" type="button" data-page="stay-safe" aria-current="false"><span class="tab-icon" aria-hidden="true">🛡️</span><span>Stay Safe</span></button>
+                <button class="tab-link" type="button" data-page="get-help" aria-current="false"><span class="tab-icon" aria-hidden="true">🆘</span><span>Get Help</span></button>
+                <button class="tab-link" type="button" data-page="profile" aria-current="false"><span class="tab-icon" aria-hidden="true">👤</span><span>Profile</span></button>
+            </nav>
+
+            <section id="home" class="student-page active" aria-labelledby="hero-title">
+                <div class="hero">
+                    <div class="hero-copy">
+                        <p class="eyebrow">YOUR CAMPUS, CONNECTED</p>
+                        <h1 id="hero-title">Support that moves<br>you <span>forward.</span></h1>
+                        <p class="hero-description">Find the help, resources, and people you need to make the most of your student journey.</p>
+                        <button class="button button-light" id="get-started">Get started <span aria-hidden="true">→</span></button>
+                        <p class="hero-note">Tell us what you need. We’ll connect you with the right support and keep you updated.</p>
+                    </div>
+                    <div class="hero-art" aria-hidden="true">
+                        <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+                        <div class="art-card"><span class="art-icon">✦</span><strong>Here for your<br>next step.</strong><span class="art-caption">One student. One connection.</span></div>
+                        <span class="art-spark spark-one">✳</span><span class="art-spark spark-two">＋</span>
+                    </div>
+                </div>
+
+                <section class="section" id="services" aria-labelledby="services-title">
+                    <div class="section-heading">
+                        <div><p class="eyebrow">START HERE</p><h2 id="services-title">What can we help with?</h2></div>
+                        <label class="search-box"><span aria-hidden="true">⌕</span><span class="visually-hidden">Search services</span><input id="service-search" type="search" placeholder="Search support or services"></label>
+                    </div>
+                    <div class="filter-row" role="group" aria-label="Filter services">
+                        <button class="filter-chip selected" data-filter="all" aria-pressed="true">All services</button>
+                        <button class="filter-chip" data-filter="study" aria-pressed="false">Study</button>
+                        <button class="filter-chip" data-filter="wellbeing" aria-pressed="false">Wellbeing</button>
+                        <button class="filter-chip" data-filter="practical" aria-pressed="false">Practical support</button>
+                    </div>
+                    <div id="service-grid" class="service-grid">
+                        <article class="service-card" data-category="study" data-search="academic tutoring study learning course support">
+                            <span class="service-icon icon-lilac" aria-hidden="true">✎</span><p class="card-kicker">STUDY & GROW</p><h3>Academic support</h3><p>Find tutoring, study resources, and guidance to help you succeed.</p><button class="text-link" data-request="Academic support">Explore support <span aria-hidden="true">→</span></button>
+                        </article>
+                        <article class="service-card" data-category="wellbeing" data-search="wellbeing counselling mental health safety trusted person">
+                            <span class="service-icon icon-peach" aria-hidden="true">♡</span><p class="card-kicker">YOU MATTER</p><h3>Wellbeing & safety</h3><p>Find school wellbeing support and guidance.</p><button class="text-link" data-request="Wellbeing and safety">Find support <span aria-hidden="true">→</span></button>
+                        </article>
+                        <article class="service-card" data-category="practical" data-search="financial funding food transport accommodation practical">
+                            <span class="service-icon icon-mint" aria-hidden="true">⌂</span><p class="card-kicker">EVERYDAY HELP</p><h3>Practical support</h3><p>Get help finding student services, funding, and essentials.</p><button class="text-link" data-request="Practical support">See options <span aria-hidden="true">→</span></button>
+                        </article>
+                        <article class="service-card" data-category="study" data-search="digital access devices internet technology">
+                            <span class="service-icon icon-yellow" aria-hidden="true">⌘</span><p class="card-kicker">STAY CONNECTED</p><h3>Digital access</h3><p>Explore device, data, and digital learning support options.</p><button class="text-link" data-request="Digital access">Get connected <span aria-hidden="true">→</span></button>
+                        </article>
+                    </div>
+                    <p id="service-empty" class="empty-state" hidden>No services match that search. Try another word or choose a different filter.</p>
+                </section>
+
+                <section class="trust-strip" aria-label="About U-Connect">
+                    <div><span class="trust-icon" aria-hidden="true">◎</span><div><strong>Built around students</strong><p>Support should be simple to find and easy to use.</p></div></div>
+                    <div><span class="trust-icon" aria-hidden="true">▤</span><div><strong>Your information matters</strong><p>Requests are saved securely and scoped to your account and school.</p></div></div>
+                    <div><span class="trust-icon" aria-hidden="true">↗</span><div><strong>Report a problem</strong><p><a href="mailto:support@u-connect.example">Tell our support team</a> if something isn’t working.</p></div></div>
+                </section>
+            </section>
+
+            <section id="learn" class="student-page" aria-labelledby="learn-title">
+                <div class="section-heading page-heading"><div><p class="eyebrow">LEARN</p><h1 id="learn-title">Learning support</h1><p class="muted">Ask your school about study guidance, learning materials, and digital access.</p></div></div>
+                <div class="service-grid page-cards">
+                    <article class="service-card">
+                        <span class="service-icon icon-lilac" aria-hidden="true">✎</span><p class="card-kicker">STUDY & GROW</p><h2>Academic support</h2><p>Request tutoring, study resources, or guidance with your coursework.</p><button class="text-link" data-request="Academic support">Request academic support <span aria-hidden="true">→</span></button>
+                    </article>
+                    <article class="service-card">
+                        <span class="service-icon icon-yellow" aria-hidden="true">⌘</span><p class="card-kicker">STAY CONNECTED</p><h2>Digital access</h2><p>Ask about options for devices, data, or access to digital learning.</p><button class="text-link" data-request="Digital access">Request digital support <span aria-hidden="true">→</span></button>
+                    </article>
+                </div>
+                <p class="muted page-hint">You can also <button class="text-link" type="button" data-go-page="home">browse all services</button>.</p>
+            </section>
+
+            <section id="stay-safe" class="student-page" aria-labelledby="safety-title">
+                <div class="section-heading page-heading"><div><p class="eyebrow">STAY SAFE</p><h1 id="safety-title">Your wellbeing matters</h1><p class="muted">Connect with your school’s wellbeing and safety support.</p></div></div>
+                <div class="panel safety-panel">
+                    <span class="service-icon icon-peach" aria-hidden="true">♡</span>
+                    <h2>Wellbeing & safety support</h2>
+                    <p class="muted">Request support from your school’s wellbeing team. Share only what you’re comfortable sharing.</p>
+                    <button class="button button-dark" data-request="Wellbeing and safety">Find support</button>
+                </div>
+                <p class="safety-notice"><strong>Need urgent help?</strong> If you are in immediate danger, contact local emergency services or a trusted person now. Do not use U-Connect for emergencies.</p>
+            </section>
+
+            <section id="get-help" class="student-page" aria-labelledby="get-help-title">
+                <div class="section-heading page-heading"><div><p class="eyebrow">GET HELP</p><h1 id="get-help-title">Support when you need it</h1><p class="muted">Request practical help, follow updates, or contact the support team.</p></div><button class="button button-dark" id="new-request-button">Make a request</button></div>
+                <article class="service-card practical-card">
+                    <span class="service-icon icon-mint" aria-hidden="true">⌂</span><p class="card-kicker">EVERYDAY HELP</p><h2>Practical support</h2><p>Ask about student services, funding, food, transport, or accommodation.</p><button class="text-link" data-request="Practical support">Request practical support <span aria-hidden="true">→</span></button>
+                </article>
+                <section class="section two-column">
+                    <div class="panel tracking-panel" id="my-requests">
+                        <div class="section-heading compact"><div><p class="eyebrow">YOUR ACTIVITY</p><h2>My requests</h2></div><span id="request-total" class="count-pill">0</span></div>
+                        <p class="muted">Updates stay here, so you always know what happens next.</p>
+                        <div id="request-list" class="request-list"></div>
+                        <div id="requests-empty" class="empty-inline"><span aria-hidden="true">✧</span><strong>Nothing in progress</strong><p>When you ask for support, you can follow its status here.</p><button class="text-link" id="browse-services">Browse services <span aria-hidden="true">→</span></button></div>
+                    </div>
+                    <div class="panel help-panel">
+                        <p class="eyebrow">NEED A HAND?</p><h2>We're here to help.</h2>
+                        <p class="muted">Not sure where to begin? Check the quick answers or talk to the support team.</p>
+                        <div class="help-actions"><a class="button button-dark" href="mailto:support@u-connect.example">Contact support</a><button class="button button-outline" id="faq-button">Read FAQs</button></div>
+                        <div class="faq-list" id="faq-list" hidden>
+                            <details><summary>Who can see my request?</summary><p>Authorized administrators at your school can review requests to provide support. Share only what is needed.</p></details>
+                            <details><summary>How do I check for updates?</summary><p>Your latest request status appears in My requests.</p></details>
+                            <details><summary>What if I need urgent help?</summary><p>If you are in immediate danger, contact local emergency services or a trusted person now.</p></details>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section id="profile" class="student-page" aria-labelledby="profile-title">
+                <div class="section-heading page-heading"><div><p class="eyebrow">YOUR ACCOUNT</p><h1 id="profile-title">My profile</h1><p class="muted">Manage your personal information and settings.</p></div></div>
+                <div class="panel profile-panel">
+                    <div class="avatar-small profile-avatar" aria-hidden="true">S</div>
+                    <h2 id="profile-display-name">Student</h2>
+                    <p id="profile-display-email" class="muted"></p>
+                    <div class="help-actions"><button class="button button-dark" id="edit-profile-button">Edit profile</button><button class="button button-outline" id="profile-logout-button">Sign out</button></div>
+                </div>
+            </section>
+        </div>
+
+        <div id="admin-view" class="app-view" hidden>
+            <div class="admin-heading">
+                <div><p class="eyebrow">U-CONNECT OPERATIONS</p><h1>School support requests</h1><p class="muted">Review and manage requests for your school.</p></div>
+                <button id="export-button" class="button button-dark">↓ Export report</button>
+            </div>
+            <section class="admin-panel">
+                <div class="section-heading"><div><p class="eyebrow">SERVICE QUEUE</p><h2>Request management</h2></div><span class="muted" id="queue-count"></span></div>
+                <div class="admin-controls">
+                    <label class="search-box"><span aria-hidden="true">⌕</span><span class="visually-hidden">Search requests</span><input id="request-search" type="search" placeholder="Search requests"></label>
+                    <label class="select-label"><span class="visually-hidden">Filter by status</span><select id="status-filter"><option value="all">All statuses</option><option>New</option><option>In review</option><option>Approved</option><option>Resolved</option><option>Rejected</option></select></label>
+                    <label class="select-label"><span class="visually-hidden">Filter by category</span><select id="category-filter"><option value="all">All categories</option><option>Academic support</option><option>Wellbeing and safety</option><option>Practical support</option><option>Digital access</option></select></label>
+                    <label class="date-label">From <input id="date-from" type="date"></label>
+                    <label class="date-label">To <input id="date-to" type="date"></label>
+                </div>
+                <p id="date-filter-error" class="form-message error-message" role="alert" hidden>The start date must be on or before the end date.</p>
+                <div class="table-wrap"><table><thead><tr><th>Request</th><th>Student</th><th>Submitted</th><th>Status</th><th>Assign to</th><th>Update status</th></tr></thead><tbody id="admin-request-rows"></tbody></table></div>
+                <p id="admin-requests-empty" class="empty-state" hidden>No requests found. Clear the filters or check back later.</p>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer"><span>© 2026 U-Connect</span><span>Student support, connected.</span><button id="theme-button" class="theme-button" aria-label="Toggle colour theme">◐</button></footer>
+
+    <dialog id="request-dialog" class="modal">
+        <form id="request-form" method="dialog">
+            <button type="button" class="modal-close" data-close-dialog aria-label="Close">×</button>
+            <p class="eyebrow">LET’S GET YOU CONNECTED</p><h2>Request support</h2><p class="muted">Share only what you’re comfortable sharing. Authorized administrators at your school can review your request.</p>
+            <label>What do you need help with?<select id="request-category" name="category" required><option value="">Choose a service</option><option>Academic support</option><option>Wellbeing and safety</option><option>Practical support</option><option>Digital access</option></select></label>
+            <label>A little more detail<textarea name="description" rows="4" maxlength="600" placeholder="Tell us what would be helpful (optional)"></textarea></label>
+            <p id="form-error" class="form-message error-message" role="alert" hidden></p>
+            <button class="button button-dark button-full" type="submit">Send request</button>
+            <p class="form-footnote">School administrators can review requests. Avoid sharing sensitive details; do not use this service for emergencies.</p>
+        </form>
+    </dialog>
+    <dialog id="profile-dialog" class="modal">
+        <form id="profile-form" method="dialog">
+            <button type="button" class="modal-close" data-close-dialog aria-label="Close">×</button>
+            <p class="eyebrow">YOUR ACCOUNT</p><h2>Your profile</h2>
+            <label>Your name<input id="profile-name-input" name="name" autocomplete="name" required maxlength="80"></label>
+            <label>Email address<input id="profile-email-input" name="email" type="email" autocomplete="email" readonly></label>
+            <button class="button button-dark button-full" type="submit">Save profile</button>
+        </form>
+    </dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="/static/app.js"></script>
 </body>
 </html>
